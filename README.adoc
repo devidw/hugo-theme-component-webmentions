@@ -21,6 +21,8 @@ theme:
     # …
 ----
 
+And include the partial in your page template:
+
 [source,go]
 ----
 {{ partial "webmentions.html" . }}
