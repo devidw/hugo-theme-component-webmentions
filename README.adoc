@@ -2,6 +2,25 @@
 
 Extends your Hugo theme with a partial to list Webmentions inside your page templates.
 
+== Usage
+
+Clone the repository as GIT submodule into your `themes` directory:
+
+[source,sh]
+----
+git submodule add https://github.com/devidw/hugo-theme-component-webmentions ./themes/hugo-theme-component-webmentions
+----
+
+Include the theme component in your themes list of your configuraition:
+
+[source,yaml]
+----
+theme:
+    # …
+    - "hugo-theme-component-webmentions"
+    # …
+----
+
 [source,go]
 ----
 {{ partial "webmentions.html" . }}
