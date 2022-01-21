@@ -1,0 +1,11 @@
+= Hugo Theme Component: Webmentions
+
+Extends your Hugo theme with a partial to list Webmentions inside your page templates.
+
+[source,go]
+----
+{{ partial "webmentions.html" . }}
+----
+
+== Resources
+* https://telegraph.p3k.io/send-a-webmention[Send a Webmention]

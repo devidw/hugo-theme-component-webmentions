@@ -1,0 +1,110 @@
+{{ $url := (print "https://webmention.io/api/mentions.jf2?target=" .Permalink) }}
+{{/*
+{{ $url := "https://webmention.io/api/mentions.jf2?target=https://indieweb.org" }}
+{{ $url := "https://webmention.io/api/mentions.jf2?target=https://aaronparecki.com/2018/06/30/11/your-first-webmention"
+}}
+*/}}
+{{ $url :=
+"https://webmention.io/api/mentions.jf2?target=https://david.wolf.gdn/how-to-add-custom-javascript-to-adobe-captivate-projects/"
+}}
+
+{{ $webmentions := getJSON $url }}
+
+{{ if and $webmentions (isset $webmentions "children") }}
+{{ $webmentions := $webmentions.children }}
+
+{{ $inReplyTo := where $webmentions "wm-property" "=" "in-reply-to" }}
+{{ $likekOf := where $webmentions "wm-property" "=" "like-of" }}
+{{ $repostOf := where $webmentions "wm-property" "=" "repost-of" }}
+{{ $bookmarkOf := where $webmentions "wm-property" "=" "bookmark-of" }}
+{{ $mentionOf := where $webmentions "wm-property" "=" "mention-of" }}
+{{ $rsvp := where $webmentions "wm-property" "=" "rsvp" }}
+
+{{ $count := len $mentionOf }}
+
+<section class="webmentions">
+    <header>
+        <h1>
+            {{ $count }}
+            {{ if gt $count 1 }}
+            Webmentions
+            {{ else }}
+            Webmention
+            {{ end }}
+        </h1>
+    </header>
+    <div class="entries">
+        {{ range $mentionOf }}
+
+        {{ $property := index . "wm-property" }}
+        {{ $received := index . "wm-received" }}
+        {{/*
+        {{ $url := index . "wm-url" }}
+        {{ $name := index . "wm-name" }}
+        {{ $avatar := index . "wm-avatar" }}
+        {{ $content := index . "wm-content" }}
+        {{ $inReplyTo := index . "wm-in-reply-to" }}
+        {{ $likekOf := index . "wm-like-of" }}
+        {{ $repostOf := index . "wm-repost-of" }}
+        {{ $bookmarkOf := index . "wm-bookmark-of" }}
+        {{ $mentionOf := index . "wm-mention-of" }}
+        {{ $rsvp := index . "wm-rsvp" }}
+        */}}
+
+        {{/* Author name */}}
+        {{ $author_name := "" }}
+        {{ if and .author .author.name }}
+        {{ $author_name = .author.name }}
+        {{ end }}
+
+        {{/* Author URL */}}
+        {{ $author_url := "" }}
+        {{ if and .author .author.url }}
+        {{ $author_url = .author.url }}
+        {{ end }}
+
+        {{/* Author photo */}}
+        {{ $author_photo := "" }}
+        {{ if and .author .author.photo }}
+        {{ $author_photo = .author.photo }}
+        {{ end }}
+
+        <article class="entry">
+            {{/*
+            {{ $property }}
+            */}}
+
+            {{ if $author_photo }}
+            <img class="photo" src="{{ $author_photo }}" loading="lazy" onerror="this.style.display='none'">
+            {{ end }}
+
+            <section>
+                <footer>
+                    {{ if $author_name }}
+                    {{- if $author_url -}}
+                    <a href="{{ $author_url }}" target="_blank" rel="external author noopener noreferrer">
+                        {{- end -}}
+                        <span>
+                            {{- $author_name -}}
+                        </span>
+                        {{- if $author_url -}}
+                    </a>
+                    {{- end -}}
+                    {{- end -}}
+                    <time datetime="{{ $received }}">
+                        {{ time.Format "Monday, January 2, 2006" $received }}
+                    </time>
+                </footer>
+                <div class="content">
+                    {{ if and .content .content.text }}
+                    <p>
+                        {{ truncate 160 .content.text }}
+                    </p>
+                    {{ end }}
+                </div>
+            </section>
+        </article>
+        {{ end }}
+    </div>
+</section>
+{{ end }}
