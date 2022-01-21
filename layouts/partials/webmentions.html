@@ -8,6 +8,7 @@
 }}
 */}}
 
+{{ if not (in .Permalink "%C3%") }}
 {{ $webmentions := getJSON $url }}
 
 {{ if and $webmentions (isset $webmentions "children") }}
@@ -22,6 +23,7 @@
 
 {{ $count := len $mentionOf }}
 
+{{ if gt $count 0 }}
 <section class="webmentions">
     <header>
         <h1>
@@ -55,4 +57,6 @@
         {{ end }}
     </div>
 </section>
+{{ end }}
+{{ end }}
 {{ end }}
